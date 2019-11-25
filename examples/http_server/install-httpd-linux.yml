@@ -1,0 +1,47 @@
+---
+- name: Install and configure Apache on Linux
+  hosts: linux_hosts
+
+  vars:
+    httpd_conf_file: '/etc/httpd/conf/httpd.conf'
+ 
+  tasks:
+    - name: Install Apache
+      yum: 
+        name: httpd
+        state: installed
+
+    - name: Firewall rule to allow HTTP on TCP port 80
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes
+
+    - name: Firewall rule to allow HTTPS on TCP port 443
+      firewalld:
+        service: https
+        permanent: yes
+        state: enabled
+        immediate: yes
+
+    - name: Change ServerAdmin email
+      lineinfile:
+        path: "{{ httpd_conf_file }}"
+        regexp: '^ServerAdmin '
+        line: ServerAdmin ansible@automationbasics.net
+        backrefs: yes
+
+    - name: Overwrite index.html file with local copy
+      template:
+        src: index.html.j2
+        dest: '/var/www/html/index.html'
+      register: index_file
+
+    - name: Set service startup mode to auto and ensure it is restarted
+      service:
+        name: httpd
+        enabled: yes
+        state: restarted
+      when: index_file.changed
+

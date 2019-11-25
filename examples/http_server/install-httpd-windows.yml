@@ -1,0 +1,67 @@
+---
+- name: Install and configure Apache on Windows
+  hosts: windows_hosts 
+
+  vars:
+    httpd_conf_file: 'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/conf/httpd.conf'
+
+  tasks:
+    - name: Download the Apache installer
+      win_get_url:
+        url: 'https://archive.apache.org/dist/httpd/binaries/win32/httpd-2.2.25-win32-x86-no_ssl.msi'
+        dest: 'C:\Users\ansible\Downloads\httpd-2.2.25-win32-x86-no_ssl.msi'
+
+    - name: Install Apache
+      win_package: 
+        path: 'C:\Users\ansible\Downloads\httpd-2.2.25-win32-x86-no_ssl.msi'
+        state: present
+
+    - name: Firewall rule to allow HTTP on TCP port 80
+      win_firewall_rule:
+        name: HTTP_apache
+        localport: 80
+        action: allow
+        direction: in
+        protocol: tcp
+        state: present
+        enabled: yes
+
+    - name: Firewall rule to allow HTTPS on TCP port 443
+      win_firewall_rule:
+        name: HTTPS_apache
+        localport: 443
+        action: allow
+        direction: in
+        protocol: tcp
+        state: present
+        enabled: yes        
+
+    - name: Change ServerAdmin email
+      win_lineinfile:
+        path: "{{ httpd_conf_file }}"
+        regexp: '^ServerAdmin '
+        insertafter: '^#'
+        line: ServerAdmin ansible@automationbasics.net
+        backrefs: yes
+
+    - name: Run command - install httpd service that only runs if folder exists and runs from a specific folder
+      win_command: httpd.exe -k install
+      args:
+        chdir: 'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/bin'
+      # This is here just to ensure idepodency is in place
+      # running installation for second time returns code different than 0
+      ignore_errors: yes
+
+    - name: Overwrite index.html file with local copy
+      win_template:
+        src: index.html.j2
+        dest: 'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/htdocs/index.html'
+      register: index_file
+
+    - name: Set service startup mode to auto and ensure it is restarted
+      win_service:
+        name: Apache2.2
+        start_mode: auto
+        state: restarted
+      when: index_file.changed
+

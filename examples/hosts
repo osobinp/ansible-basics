@@ -1,0 +1,26 @@
+[linux_hosts]
+192.168.192.133
+
+[linux_hosts:vars]
+ansible_user=ansible
+ansible_password=ansible
+ansible_become_user=root
+ansible_become_password=ansible
+ansible_become=yes
+ansible_become_method=sudo
+ansible_connection=ssh
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+[windows_hosts]
+192.168.192.131
+
+[windows_hosts:vars]
+ansible_user=ansible
+ansible_password=ansible
+ansible_become_user=Administrator
+ansible_become_password=ansible
+ansible_become=yes
+ansible_become_method=runas
+ansible_connection=winrm
+ansible_winrm_transport=basic
+ansible_winrm_server_cert_validation=ignore
