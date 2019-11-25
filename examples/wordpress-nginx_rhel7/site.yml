@@ -1,0 +1,10 @@
+---
+- name: Install WordPress, MariaDB, Nginx, and PHP-FPM
+  hosts: linux_hosts
+
+  roles:
+    - common
+    - mariadb
+    - nginx
+    - php-fpm
+    - wordpress

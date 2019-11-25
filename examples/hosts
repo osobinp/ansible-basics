@@ -1,5 +1,5 @@
 [linux_hosts]
-192.168.192.133
+192.168.192.138
 
 [linux_hosts:vars]
 ansible_user=ansible
