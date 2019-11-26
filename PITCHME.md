@@ -8,17 +8,25 @@
 ---
 ### What is Ansible
 
-	2. What is Ansible - Czym jest i zalety
+Ansible is an open-source software provisioning, configuration management, and application-deployment tool. It runs on many Unix-like systems, and can configure both Unix-like systems as well as Microsoft Windows. It includes its own declarative language to describe system configuration.  
+Ansible is agentless, temporarily connecting remotely via SSH or remote PowerShell to do its tasks.
 
-One of the most significant advantages of Ansible is that it is free to use by everyone.
-It does not need any special system administrator skills to install and use Ansible, and the official documentation is very comprehensive.
-Its modularity regarding plugins, modules, inventories, and playbooks make Ansible the perfect companion to orchestrate large environments.
-Ansible is very lightweight and consistent, and no constraints regarding the operating system or underlying hardware are present.
-It is also very secure due to its agentless capabilities and due to the use of OpenSSH security features.
-Another advantage that encourages the adoption of Ansible is its smooth learning curve determined by the comprehensive documentation and easy to learn structure and configuration.
+---
+### Advantages of Ansible
+* One of the most significant advantages of Ansible is that it is free to use by everyone.
+* It does not need any special system administrator skills to install and use Ansible, and the official documentation is very comprehensive.
+* Its modularity regarding plugins, modules, inventories, and playbooks make Ansible the perfect companion to orchestrate large environments.
+* Ansible is very lightweight and consistent, and no constraints regarding the operating system or underlying hardware are present.
+* Adoption of Ansible is its smooth learning curve determined by the comprehensive documentation and easy to learn structure and configuration.
 
-
-
+---
+### What do you need
+@ul[spaced text-white]
+- You will be amazed
+- What you can achieve
+- *With a little imagination...*
+- And **GitPitch Markdown**
+@ulend
 ---
 ### Installation
 	3. Instalacja - Linux Box (yum/dpkg , pip) , WSL (metody jak wczesniej)
