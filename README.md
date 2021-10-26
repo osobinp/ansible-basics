@@ -1,6 +1,6 @@
 # ansible-basics
 
-By pawel.osobinski[at]accenture.com
+By pawel.osobinski
 
 Sources:  
 https://www.guru99.com/ansible-tutorial.html  
