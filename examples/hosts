@@ -1,11 +1,12 @@
 [linux_hosts]
 # Type you fqdn (IPs here)
+localhost
 
 [linux_hosts:vars]
 ansible_user=ansiblesvc
-ansible_password=#Type password here
+ansible_password= #Type password here
 ansible_become_user=root
-ansible_become_password=#Type password here (unless you can run commands via root without password)
+ansible_become_password= #Type password here (unless you can run commands via root without password)
 ansible_become=yes
 ansible_become_method=sudo
 ansible_connection=ssh

@@ -11,20 +11,6 @@
         name: httpd
         state: installed
 
-    # - name: Firewall rule to allow HTTP on TCP port 80
-    #   firewalld:
-    #     service: http
-    #     permanent: yes
-    #     state: enabled
-    #     immediate: yes
-
-    # - name: Firewall rule to allow HTTPS on TCP port 443
-    #   firewalld:
-    #     service: https
-    #     permanent: yes
-    #     state: enabled
-    #     immediate: yes
-
     - name: Change ServerAdmin email
       lineinfile:
         path: "{{ httpd_conf_file }}"
@@ -35,8 +21,8 @@
     - name: Change Default port
       lineinfile:
         path: "{{ httpd_conf_file }}"
-        regexp: '^Port '
-        line: Port 8080
+        regexp: '^Listen '
+        line: Listen 8080
         backrefs: yes
 
     - name: Overwrite index.html file with local copy
