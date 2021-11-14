@@ -63,10 +63,10 @@
     name: policycoreutils-python
     state: present
 
-- name: Put SELinux in permissive mode, logging actions that would be blocked.
+- name: Enable SELinux
   ansible.posix.selinux:
     policy: targeted
-    state: permissive
+    state: enforcing
 
 - name: Set the SELinux policy for the Wordpress directory
   community.general.sefcontext:
