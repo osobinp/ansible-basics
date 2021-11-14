@@ -72,24 +72,28 @@
   community.general.sefcontext:
     target: "/srv/wordpress(/.*)?"
     setype: httpd_sys_content_t
+    ignore_selinux_state: yes
     state: present
-
+    
 - name: Set the SELinux policy for wp-config.phpy
   community.general.sefcontext:
     target: "/srv/wordpress/wp-config\\.php"
     setype: httpd_sys_script_exec_t
+    ignore_selinux_state: yes
     state: present
 
 - name: Set the SELinux policy for wp-content directory
   community.general.sefcontext:
     target: "/srv/wordpress/wp-content(/.*)?"
     setype: httpd_sys_rw_content_t
+    ignore_selinux_state: yes
     state: present
 
 - name: Set the SELinux policy for the *.php files
   community.general.sefcontext:
     target: "/srv/wordpress/.*\\.php"
     setype: httpd_sys_script_exec_t
+    ignore_selinux_state: yes
     state: present
 
 # - name: set the SELinux policy for the Wordpress directory
@@ -117,18 +121,21 @@
   community.general.sefcontext:
     target: "/srv/wordpress/wp-content/upgrade(/.*)?"
     setype: httpd_sys_rw_content_t
+    ignore_selinux_state: yes
     state: present
 
 - name: Set the SELinux policy for the Uploads directory
   community.general.sefcontext:
     target: "/srv/wordpress/wp-content/uploads(/.*)?"
     setype: httpd_sys_rw_content_t
+    ignore_selinux_state: yes
     state: present
 
 - name: Set the SELinux policy for the wp-includes php files
   community.general.sefcontext:
     target: "/srv/wordpress/wp-includes/.*\\.php"
     setype: httpd_sys_script_exec_t
+    ignore_selinux_state: yes
     state: present
 
 - name: set the SELinux on all the Files
