@@ -20,11 +20,6 @@
     group: wordpress 
     home: "/srv/wordpress/"
 
-# - name: Fetch random salts for WordPress config
-#   local_action: command curl https://api.wordpress.org/secret-key/1.1/salt/
-#   register: "wp_salt"
-#   become: no
-
 - name: get API information for wp-config
   uri:
     url: "https://api.wordpress.org/secret-key/1.1/salt/"
@@ -95,27 +90,6 @@
     setype: httpd_sys_script_exec_t
     ignore_selinux_state: yes
     state: present
-
-# - name: set the SELinux policy for the Wordpress directory
-#   command: semanage fcontext -a -t httpd_sys_content_t "/srv/wordpress(/.*)?"
-
-# - name: set the SELinux policy for wp-config.php
-#   command: semanage fcontext -a -t httpd_sys_script_exec_t "/srv/wordpress/wp-config\.php"
-
-# - name: set the SELinux policy for wp-content directory
-#   command: semanage fcontext -a -t httpd_sys_rw_content_t "/srv/wordpress/wp-content(/.*)?"
-
-# - name: set the SELinux policy for the *.php files
-#   command: semanage fcontext -a -t httpd_sys_script_exec_t "/srv/wordpress/.*\.php"
-
-# - name: set the SELinux policy for the Upgrade directory
-#   command: semanage fcontext -a -t httpd_sys_rw_content_t "/srv/wordpress/wp-content/upgrade(/.*)?"
-
-# - name: set the SELinux policy for the Uploads directory
-#   command: semanage fcontext -a -t httpd_sys_rw_content_t "/srv/wordpress/wp-content/uploads(/.*)?"
-
-# - name: set the SELinux policy for the wp-includes php files
-#   command: semanage fcontext -a -t httpd_sys_script_exec_t "/srv/wordpress/wp-includes/.*\.php"
 
 - name: Set the SELinux policy for the Upgrade directory
   community.general.sefcontext:
