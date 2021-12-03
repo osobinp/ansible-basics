@@ -1,0 +1,156 @@
+#################
+Pre Lab:
+ssh-copy-id ec2-34-235-150-32.compute-1.amazonaws.com
+ssh-copy-id ec2-34-235-10-192.compute-1.amazonaws.com
+
+#################
+Lab101:
+
+EX1:
+a)
+$ vim hosts
+b-c) 
+$ cat hosts
+##
+[linux_hosts]
+ec2-34-235-150-32.compute-1.amazonaws.com
+ec2-34-235-10-192.compute-1.amazonaws.com
+##
+
+EX2:
+b)
+ansible -i hosts all -m file -a "path=/root/itforshe.txt state=touch" --check
+c)
+ansible -i hosts all -m file -a "path=/root/itforshe.txt state=touch"
+
+EX3:
+a)
+ansible-console -i hosts 
+>> command hostname
+>> command free
+
+#################
+Lab102:
+
+EX1:
+a)
+
+---
+- name: "My first playbook"
+  hosts: all
+  
+  tasks:
+    - name: "Hello World"
+      debug:
+        msg: "Hello my Ansible World! {{ inventory_hostname }}"
+
+d) 
+ansible-playbook -i hosts hello.yml
+
+#################
+Lab201:
+
+EX1:
+a)
+vim install-httpd-linux.yml
+b)
+
+---
+- name: Install and configure Apache on Linux
+  hosts: linux_hosts
+
+  vars:
+    httpd_conf_file: '/etc/httpd/conf/httpd.conf'
+ 
+  tasks:
+    - name: Install Apache
+      yum: 
+        name: httpd
+        state: installed
+
+    - name: Change ServerAdmin email
+      lineinfile:
+        path: "{{ httpd_conf_file }}"
+        regexp: '^ServerAdmin '
+        line: ServerAdmin ansible@automationbasics.net
+        backrefs: yes
+
+    - name: Change Default port
+      lineinfile:
+        path: "{{ httpd_conf_file }}"
+        regexp: '^Listen '
+        line: Listen 8080
+        backrefs: yes
+
+    - name: Overwrite index.html file with local copy
+      template:
+        src: index.html.j2
+        dest: '/var/www/html/index.html'
+      register: index_file
+
+    - name: Set service startup mode to auto and ensure it is restarted
+      service:
+        name: httpd
+        enabled: yes
+        state: restarted
+      when: index_file.changed
+
+c)
+vim index.html.j2
+>> index.html.j2
+
+<html>
+    <body>
+        <h1>Ansible Basics</h1>
+        <h3>Service httpd: running</h3>
+        <h3>System: {{ ansible_distribution }} </h3>
+        <h3>FQDN: {{ ansible_fqdn }} </h3>
+    </body>
+</html>
+
+EX2:
+a)
+ansible-playbook -i hosts install-httpd-linux.yml
+b)
+wget ec2-34-235-150-32.compute-1.amazonaws.com:8080
+
+#################
+Lab301:
+EX1:
+a)
+cd ansible-basics/examples/wordpress_lemp_server
+b)
+vim site.yml
+
+---
+- name: Install WordPress, MariaDB, Nginx, and PHP-FPM
+  hosts: linux_hosts
+
+  roles:
+    - wordpress
+    - common
+    - mariadb
+    - nginx
+    - php-fpm
+    - wordpress
+
+c)
+ansible-playbook -i ../hosts site.yml
+
+EX2:
+a)
+---
+- name: Install WordPress, MariaDB, Nginx, and PHP-FPM
+  hosts: linux_hosts
+
+  roles:
+    - common
+    - mariadb
+    - nginx
+    - php-fpm
+    - wordpress
+	
+b)
+ansible-playbook -i ../hosts site.yml
+c)
+wget ec2-34-235-150-32.compute-1.amazonaws.com

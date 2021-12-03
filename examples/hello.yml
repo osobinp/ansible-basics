@@ -1,0 +1,8 @@
+---
+- name: "My first playbook"
+  hosts: all
+  
+  tasks:
+    - name: "Hello World"
+      debug:
+        msg: "Hello my Ansible World! {{ inventory_hostname }}"
