@@ -1,0 +1,62 @@
+---
+- name: Install and configure Apache on Linux
+  hosts: linux_hosts
+
+  vars:
+    httpd_conf_file: '/etc/httpd/conf/httpd.conf'
+    nfs_share: "/nfs/data01"
+    nfs_server: "ec2-3-239-239-66.compute-1.amazonaws.com"
+    httpd_root: "/var/www/html"
+ 
+  tasks:
+
+    - name: Install Apache
+      ansible.builtin.yum: 
+        name: httpd
+        state: installed
+
+    - name: Change ServerAdmin email
+      ansible.builtin.lineinfile:
+        path: "{{ httpd_conf_file }}"
+        regexp: '^ServerAdmin '
+        line: ServerAdmin ansible@automationbasics.net
+        backrefs: yes
+      notify:
+        - Restart WEB server
+
+    - name: Change Default port
+      ansible.builtin.lineinfile:
+        path: "{{ httpd_conf_file }}"
+        regexp: '^Listen '
+        line: Listen 8080
+        backrefs: yes
+      notify:
+        - Restart WEB server
+
+    - name: "Permit traffic in default zone for httpd service"
+      ansible.posix.firewalld:
+        port: 8080/tcp
+        permanent: yes
+        state: enabled
+      vars:
+        ansible_python_interpreter: /usr/bin/python # just in case it's triggered from debian based host
+
+    - name: Mount an NFS volume
+      ansible.posix.mount:
+        src: "{{ nfs_server }}:{{ nfs_share }}/witweb"
+        path: "{{ httpd_root }}"
+        opts: ro,sync,hard
+        state: mounted
+        fstype: nfs
+      notify:
+        - Restart WEB server
+
+
+
+  handlers:
+
+    - name: Restart WEB server
+      ansible.builtin.service:
+        name: httpd
+        enabled: yes
+        state: restarted

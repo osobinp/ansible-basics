@@ -1,0 +1,27 @@
+---
+- name: Update OS
+  hosts: linux_hosts
+
+  tasks:
+
+  - name: "Permit traffic in default zone for 3022/tcp"
+    ansible.posix.firewalld:
+      port: 3022/tcp
+      permanent: yes
+      state: enabled
+
+  - name: Update all installed packages
+    ansible.builtin.yum:
+      name: '*'
+      state: latest
+      update_cache: yes
+      update_only: yes
+    register: yum_update_status
+
+  - name: Remove packages not needed
+    ansible.builtin.yum:
+      autoremove: yes
+
+  - name: Reboot when packages were updated
+    ansible.builtin.reboot:
+    when: yum_update_status.changed
