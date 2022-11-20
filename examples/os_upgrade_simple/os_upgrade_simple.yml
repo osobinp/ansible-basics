@@ -4,12 +4,6 @@
 
   tasks:
 
-  - name: "Permit traffic in default zone for 3022/tcp"
-    ansible.posix.firewalld:
-      port: 3022/tcp
-      permanent: yes
-      state: enabled
-
   - name: Update all installed packages
     ansible.builtin.yum:
       name: '*'
@@ -25,3 +19,15 @@
   - name: Reboot when packages were updated
     ansible.builtin.reboot:
     when: yum_update_status.changed
+
+  - name: "Make sure service is running"
+    ansible.builtin.service:
+      name: teleport
+      state: started
+      enabled: yes
+
+  - name: "Permit traffic in default zone for 3022/tcp"
+    ansible.posix.firewalld:
+      port: 3022/tcp
+      permanent: yes
+      state: enabled

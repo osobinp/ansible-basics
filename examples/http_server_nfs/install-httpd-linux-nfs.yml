@@ -38,8 +38,8 @@
         port: 8080/tcp
         permanent: yes
         state: enabled
-      vars:
-        ansible_python_interpreter: /usr/bin/python # just in case it's triggered from debian based host
+      # vars:
+      #   ansible_python_interpreter: /usr/bin/python # just in case it's triggered from debian based host
 
     - name: Mount an NFS volume
       ansible.posix.mount:
