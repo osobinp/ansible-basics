@@ -1,0 +1,19 @@
+---
+- name: "Critical App"
+  hosts: linux_hosts
+
+  tasks:
+
+  - name: "Permit traffic in default zone for 3022/tcp"
+    ansible.posix.firewalld:
+      port: 3022/tcp
+      permanent: yes
+      immediate: yes
+      state: enabled
+
+  - name: "Make sure service is running"
+    ansible.builtin.service:
+      name: teleport
+      state: started
+      enabled: yes
+
