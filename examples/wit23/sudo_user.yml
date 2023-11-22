@@ -1,0 +1,24 @@
+---
+- name: Set sudo permission for user
+  hosts: linux_hosts
+
+  vars:
+    sudo_usernames:
+      - "apachesvc"
+
+    sudo_httpd_commands:
+      - /bin/systemctl start httpd
+      - /bin/systemctl stop httpd
+      - /bin/systemctl restart httpd
+
+  tasks:
+
+    - name: >-
+        Allow the apachesvc user to run sudo /bin/systemctl start|stop|restart httpd
+        no password is required
+      community.general.sudoers:
+        name: "{{ item }}-httpd-service"
+        user: "{{ item }}"
+        commands: "{{ sudo_httpd_commands }}"
+        nopassword: yes
+      loop: "{{ sudo_usernames }}"
